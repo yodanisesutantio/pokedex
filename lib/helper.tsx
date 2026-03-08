@@ -1,4 +1,4 @@
-import { EvolutionNode } from "@/app/pokemon/page";
+import { EvolutionNode } from "@/app/pokemon/details";
 
 const descriptionCache: Record<number, string> = {};
 
@@ -47,7 +47,7 @@ export const VERSION_NAMES: Record<string, string> = {
 
 export function getEvolutionPaths(
   node: EvolutionNode,
-  path: EvolutionNode[] = [],
+  path: EvolutionNode[] = []
 ): EvolutionNode[][] {
   const currentPath = [...path, node];
 
@@ -56,7 +56,7 @@ export function getEvolutionPaths(
   }
 
   return node.evolves_to.flatMap((child) =>
-    getEvolutionPaths(child, currentPath),
+    getEvolutionPaths(child, currentPath)
   );
 }
 
@@ -76,15 +76,15 @@ export async function getPokemonBatch(ids: number[]) {
   const speciesData = await Promise.all(
     ids.map((id) =>
       fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`).then((r) =>
-        r.json(),
-      ),
-    ),
+        r.json()
+      )
+    )
   );
 
   const pokemonData = await Promise.all(
     ids.map((id) =>
-      fetch(`https://pokeapi.co/api/v2/pokemon/${id}`).then((r) => r.json()),
-    ),
+      fetch(`https://pokeapi.co/api/v2/pokemon/${id}`).then((r) => r.json())
+    )
   );
 
   return speciesData.map((species, i) => {
@@ -95,7 +95,7 @@ export async function getPokemonBatch(ids: number[]) {
 
     const flavorEntry = species.flavor_text_entries.find(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (e: any) => e.language.name === "en",
+      (e: any) => e.language.name === "en"
     );
 
     return {
@@ -129,7 +129,7 @@ export async function getPokemonDetails(id: number) {
   const [pokemon, species] = await Promise.all([
     fetch(`https://pokeapi.co/api/v2/pokemon/${id}`).then((r) => r.json()),
     fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`).then((r) =>
-      r.json(),
+      r.json()
     ),
   ]);
 
@@ -168,7 +168,7 @@ export async function getPokemonDetails(id: number) {
   Object.entries(versions).forEach(([gen, games]: any) => {
     const hasSprite = Object.values(games).some(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (g: any) => g?.front_default || g?.front_shiny,
+      (g: any) => g?.front_default || g?.front_shiny
     );
 
     if (hasSprite) variants.push(gen);
@@ -233,14 +233,14 @@ export async function getRegions() {
     .filter((name: string) => regionToDex[name]);
 
   const dexIndexRes = await fetch(
-    "https://pokeapi.co/api/v2/pokedex?limit=100",
+    "https://pokeapi.co/api/v2/pokedex?limit=100"
   );
 
   const dexIndex = await dexIndexRes.json();
 
   const dexMap = Object.fromEntries(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    dexIndex.results.map((d: any) => [d.name, d.url]),
+    dexIndex.results.map((d: any) => [d.name, d.url])
   );
 
   const regionResults = await Promise.all(
@@ -268,7 +268,7 @@ export async function getRegions() {
               id: p.entry_number,
               name: englishName,
             };
-          }),
+          })
         );
 
         return {
@@ -278,7 +278,7 @@ export async function getRegions() {
       } catch {
         return null;
       }
-    }),
+    })
   );
 
   return regionResults.filter(Boolean);
@@ -310,7 +310,7 @@ export async function getPokemonDescription(id: number) {
 
   const entry = data.flavor_text_entries.find(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (e: any) => e.language.name === "en",
+    (e: any) => e.language.name === "en"
   );
 
   const text = entry?.flavor_text.replace(/\f|\n/g, " ") ?? "";

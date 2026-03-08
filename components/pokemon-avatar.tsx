@@ -1,6 +1,6 @@
 "use client";
 
-import { PokemonDetails } from "@/app/pokemon/page";
+import { PokemonDetails } from "@/app/pokemon/details";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
